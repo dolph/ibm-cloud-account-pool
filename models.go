@@ -19,7 +19,7 @@ type Reservation struct {
 	Id         string    `json:"id"`
 	Duration   time.Time `json:"duration"`
 	Expiration time.Time `json:"expiration"`
-	Token      *Token
+	Token      *Token    `json:"token"`
 	Account    *Account
 }
 

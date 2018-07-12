@@ -29,16 +29,18 @@ func Reservations(w http.ResponseWriter, r *http.Request) {
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	tokenId := vars["token"]
-	fmt.Fprintf(w, "Token ID: %q", html.EscapeString(tokenId))
-
-	reservation := Reservation{}
+	token := Token{
+		Id: tokenId,
+	}
+	reservation := Reservation{
+		Token: &token,
+	}
 	json.NewEncoder(w).Encode(reservation)
 }
 
 func GetReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	reservationId := vars["reservationId"]
-	fmt.Fprintf(w, "Reservation ID: %q", html.EscapeString(reservationId))
 	reservation := Reservation{
 		Id: reservationId,
 	}
