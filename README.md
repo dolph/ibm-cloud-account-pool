@@ -12,9 +12,8 @@ resources in use after the reservation expires will be forcefully cleaned up.
 
 The system does not currently use an external datastore, and is designed to be
 run as a single process. It does not currently support high availability.
-Credentials are loaded into the service at startup. On startup, upon which they
-are verified and all accounts are forcefully cleaned before making them
-available for reservation.
+Credentials are loaded into the service at startup. Upon startup, accounts are
+verified and forcefully cleaned before making them available for reservation.
 
 ## API
 
