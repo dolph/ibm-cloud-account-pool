@@ -5,8 +5,13 @@ import "net/http"
 
 import "github.com/gorilla/mux"
 
+func SendJSON(w http.ResponseWriter, v interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(v)
+}
+
 func Index(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(statistics)
+	SendJSON(w, statistics)
 }
 
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
@@ -22,13 +27,13 @@ func CreateReservation(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Add reservation to reservations
 
-	json.NewEncoder(w).Encode(reservation)
+	SendJSON(w, reservation)
 }
 
 func GetReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	reservation := reservations[vars["reservationId"]]
-	json.NewEncoder(w).Encode(reservation)
+	SendJSON(w, reservation)
 }
 
 func DeleteReservation(w http.ResponseWriter, r *http.Request) {
@@ -38,5 +43,5 @@ func DeleteReservation(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Release reservation
 
-	json.NewEncoder(w).Encode(reservation)
+	SendJSON(w, reservation)
 }

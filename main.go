@@ -1,8 +1,6 @@
 package main
 
-import "encoding/json"
 import "fmt"
-import "html"
 import "log"
 import "net/http"
 
