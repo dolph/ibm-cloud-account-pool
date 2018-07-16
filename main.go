@@ -13,17 +13,21 @@ func main() {
 	// Seed random number generator for token & ID generation.
 	rand.Seed(time.Now().UTC().UnixNano())
 
+	// Generate a random token for testing.
 	token := NewToken()
 	fmt.Println("Initial token:", token.Id)
 
+	fmt.Println("Listening on localhost:8080...")
+	log.Fatal(http.ListenAndServe(":8080", NewRouter()))
+}
+
+func NewRouter() http.Handler {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index).Methods("GET")
 	router.HandleFunc("/reservations", CreateReservation).Methods("POST")
 	router.HandleFunc("/reservations/{reservationId}", GetReservation).Methods("GET")
 	router.HandleFunc("/reservations/{reservationId}", DeleteReservation).Methods("DELETE")
-
-	fmt.Println("Listening on localhost:8080...")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	return router
 }
 
 func NewToken() Token {
