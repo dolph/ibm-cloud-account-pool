@@ -28,7 +28,7 @@ func CreateReservation(w http.ResponseWriter, r *http.Request) {
 func GetReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	reservation := reservations[vars["reservationId"]]
-	json.NewEncoder(w).Encode()
+	json.NewEncoder(w).Encode(reservation)
 }
 
 func DeleteReservation(w http.ResponseWriter, r *http.Request) {
