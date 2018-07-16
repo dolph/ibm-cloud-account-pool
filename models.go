@@ -28,6 +28,7 @@ type Account struct {
 	Password string
 }
 
+var statistics = Statistics{}
 var tokens = make(map[string]*Token)
 var reservations = make(map[string]*Reservation)
 var accounts = make(map[string]*Account)
