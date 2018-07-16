@@ -8,6 +8,18 @@ returned when a matching account is available. All reservations are
 time-limited (but should be explicitly canceled ASAP for efficiency), and any
 resources in use after the reservation expires will be forcefully cleaned up.
 
+## Background
+
+IBM Cloud accounts carry strict quota limits, which makes automated testing
+difficult (you need multiple accounts to test more than one deployment at a
+time, for example). Generally, this means that test systems either need to be
+limited to a single account (and therefore limited to running one test at a
+time), or rotate through an array of predefined test accounts.
+
+This project solves that limitation by allowing multiple test systems to share
+a pool of single-use accounts. The solution is inspired by [OpenStack's
+nodepool](https://zuul-ci.org/docs/nodepool/).
+
 ## Design
 
 The system does not currently use an external datastore, and is designed to be
