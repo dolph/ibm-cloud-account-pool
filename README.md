@@ -27,6 +27,22 @@ run as a single process. It does not currently support high availability.
 Credentials are loaded into the service at startup. Upon startup, accounts are
 verified and forcefully cleaned before making them available for reservation.
 
+## Workflow
+
+1. Obtain an API token for the service.
+
+2. Use the API token to create a reservation request for the type of cloud
+   account you need.
+
+3. Poll the reservation endpoint until credentials are available. An expiration
+   time for the reservation will be provided, as well.
+
+4. Use the credentials to consume IBM Cloud resources.
+
+5. Cancel the reservation when you're done with the cloud account. If the
+   reservation is not explicitly cancelled, it will be forcefully terminated at
+   the expiration time specified along with the credentials.
+
 ## API
 
 ### `GET /`
