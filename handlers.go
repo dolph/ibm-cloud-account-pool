@@ -11,37 +11,55 @@ func SendJSON(w http.ResponseWriter, v interface{}) {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
+	statistics := Statistics{
+		Tokens:       len(tokens),
+		Accounts:     len(accounts),
+		Reservations: len(reservations),
+	}
 	SendJSON(w, statistics)
 }
 
+func Unauthorized(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusUnauthorized)
+	SendJSON(w, NewError("Token missing or not authorized."))
+}
+
+func SendNoContent(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	tokenId := vars["token"]
-	token := Token{
-		Id: tokenId,
+	if token, ok := tokens[r.FormValue("token")]; ok {
+		reservation := NewReservation(token)
+		SendJSON(w, reservation)
+	} else {
+		Unauthorized(w)
 	}
-	reservation := Reservation{
-		Token: &token,
-	}
-
-	// TODO: Add reservation to reservations
-
-	SendJSON(w, reservation)
 }
 
 func GetReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	reservation := reservations[vars["reservationId"]]
-	SendJSON(w, reservation)
+	if token, ok := tokens[r.FormValue("token")]; ok {
+		if reservation := reservations[vars["reservationId"]]; reservation.Token == token {
+			SendJSON(w, reservation)
+		} else {
+			Unauthorized(w)
+		}
+	} else {
+		Unauthorized(w)
+	}
 }
 
 func DeleteReservation(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	reservationId := vars["reservationId"]
-	reservation := reservations[reservationId]
-
-	// TODO: Release reservation
-
-	SendJSON(w, reservation)
+	if token, ok := tokens[r.FormValue("token")]; ok {
+		if reservation := reservations[vars["reservationId"]]; reservation.Token == token {
+			reservation.Delete()
+			SendNoContent(w)
+		} else {
+			Unauthorized(w)
+		}
+	} else {
+		Unauthorized(w)
+	}
 }
