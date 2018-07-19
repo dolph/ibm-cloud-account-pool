@@ -14,12 +14,12 @@ func main() {
 	// Seed random number generator for token & ID generation.
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	data := loadData()
-	for _, token := range data.Tokens {
+	config := loadConfig()
+	for _, token := range config.Tokens {
 		tokens[token.Id] = &token
 	}
 	fmt.Printf("Loaded %v token(s).\n", len(tokens))
-	for _, account := range data.Accounts {
+	for _, account := range config.Accounts {
 		accounts[account.Username] = &account
 	}
 	fmt.Printf("Loaded %v account(s).\n", len(accounts))
@@ -37,17 +37,17 @@ func NewRouter() http.Handler {
 	return router
 }
 
-func loadData() Yaml {
-	var data Yaml
-	yamlFile, err := ioutil.ReadFile("data.yml")
+func loadConfig() Yaml {
+	var config Yaml
+	yamlFile, err := ioutil.ReadFile("config.yml")
 	if err != nil {
-		log.Fatalf("Error loading data.yml: %v", err)
+		log.Fatalf("Error loading config.yml: %v", err)
 	}
-	err = yaml.Unmarshal(yamlFile, &data)
+	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
-		log.Fatalf("Error unmarshalling data.yml: %v", err)
+		log.Fatalf("Error unmarshalling config.yml: %v", err)
 	}
-	return data
+	return config
 }
 
 type Yaml struct {

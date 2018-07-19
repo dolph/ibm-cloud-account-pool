@@ -31,7 +31,7 @@ func SendNoContent(w http.ResponseWriter) {
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
 	if token, ok := tokens[r.FormValue("token")]; ok {
 		reservation := NewReservation(token)
-		SendJSON(w, reservation)
+		http.Redirect(w, r, "/reservations/"+reservation.Id+"?token="+token.Id, http.StatusFound)
 	} else {
 		Unauthorized(w)
 	}
