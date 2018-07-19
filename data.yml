@@ -1,7 +1,0 @@
-tokens:
-- id: Example1
-accounts:
-- username: abc
-  password: xyz
-- username: foo
-  password: bar

@@ -21,7 +21,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 func Unauthorized(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusUnauthorized)
-	SendJSON(w, NewError("Token missing or not authorized."))
+	SendJSON(w, NewError("Token not authorized."))
 }
 
 func SendNoContent(w http.ResponseWriter) {

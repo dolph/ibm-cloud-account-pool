@@ -1,0 +1,10 @@
+tokens:
+- id: example1
+accounts:
+- username: abc
+  password: xyz
+- username: foo
+  password: bar
+cloudant:
+  apikey: cc1LbGzZ18enVKxnIJcyCilQO7JtKQQLDB7LiMbtFGXi
+  url: https://1b692f3b-8481-45a6-ba40-7322fa2ef2ad-bluemix.cloudant.com
