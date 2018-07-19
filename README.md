@@ -1,5 +1,7 @@
 # Account pool
 
+[![Build Status](https://travis-ci.org/dolph/ibm-cloud-account-pool.svg?branch=master)](https://travis-ci.org/dolph/ibm-cloud-account-pool)
+
 `acctpool` is a web service for temporarily borrowing IBM Cloud accounts. It
 works using an authenticated reservation system, where consumers can
 authenticate themselves with `acctpool`, make a reservation request for a
