@@ -1,11 +1,11 @@
 package main
 
 import "fmt"
-import "math/rand"
-import "log"
 import "io/ioutil"
-import "time"
+import "log"
+import "math/rand"
 import "net/http"
+import "time"
 
 import "github.com/gorilla/mux"
 import "gopkg.in/yaml.v2"
