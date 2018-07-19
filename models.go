@@ -25,7 +25,7 @@ func NewId() string {
 }
 
 type Token struct {
-	Id string
+	Id string `json:"id"`
 }
 
 func NewToken() Token {
@@ -43,7 +43,7 @@ type Reservation struct {
 	Id         string    `json:"id"`
 	Expiration time.Time `json:"expiration"`
 	Token      *Token    `json:"token"`
-	Account    *Account
+	Account    *Account  `json:"credentials"`
 }
 
 func NewReservation(token *Token) Reservation {
