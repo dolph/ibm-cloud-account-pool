@@ -75,10 +75,10 @@ func (t *iam) request(values url.Values) {
 	t.refreshToken = accessTokenResp.RefreshToken
 	t.accessToken = accessTokenResp.AccessToken
 
-	// This is subjective, but this calculates a desired refresh deadline after
+	// This is subjective, but it calculates a desired refresh deadline after
 	// an arbitrary portion of the actual TTL as passed. If we waited until the
 	// TTL was actually expired, then there's a good chance that requests would
-	// be issued with valid access tokens that expire in flight.
+	// be issued with valid access tokens which expire in flight.
 	var bufferedTTL float64 = (-0.5) * float64(accessTokenResp.ExpiresIn)
 	t.refreshAt = time.Unix(accessTokenResp.Expiration, 0).Add(time.Duration(int64(bufferedTTL)) * time.Second)
 }
