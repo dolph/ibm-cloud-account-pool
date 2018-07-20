@@ -8,16 +8,19 @@ import "net/http"
 import "net/url"
 import "strings"
 
+var ZERO_TIME = time.Time{}
+
 type iam struct {
 	APIKey       string
 	URL          string
 	refreshToken string
 	accessToken  string
+	reauthAt     time.Time
 	refreshAt    time.Time
 }
 
-func New(apiKey string) iam {
-	return iam{
+func NewIAM(apiKey string) *iam {
+	return &iam{
 		APIKey: apiKey,
 		URL:    "https://iam.bluemix.net/identity/token",
 	}
@@ -32,8 +35,22 @@ func (t *iam) GetAccessToken() string {
 	return t.accessToken
 }
 
+func (t *iam) GetHeaders() *http.Header {
+	headers := &http.Header{}
+	t.AddAuthorization(headers)
+	return headers
+}
+
+func (t *iam) AddAuthorization(headers *http.Header) {
+	headers.Add("Authorization", fmt.Sprintf("Bearer %v", t.GetAccessToken()))
+}
+
 func (t *iam) needsRefresh() bool {
 	return time.Now().UTC().After(t.refreshAt)
+}
+
+func (t *iam) needsReauthenticate() bool {
+	return time.Now().UTC().After(t.reauthAt)
 }
 
 func (t *iam) request(values url.Values) {
@@ -75,6 +92,13 @@ func (t *iam) request(values url.Values) {
 	t.refreshToken = accessTokenResp.RefreshToken
 	t.accessToken = accessTokenResp.AccessToken
 
+	// Refresh tokens only last about a month without any warning (the
+	// expiration is never specified via the API), so let's totally
+	// re-authenticate after two weeks to be safe.
+	if t.reauthAt == ZERO_TIME {
+		t.reauthAt = time.Unix(accessTokenResp.Expiration, 0).Add(14 * 24 * time.Hour)
+	}
+
 	// This is subjective, but it calculates a desired refresh deadline after
 	// an arbitrary portion of the actual TTL as passed. If we waited until the
 	// TTL was actually expired, then there's a good chance that requests would
@@ -83,6 +107,9 @@ func (t *iam) request(values url.Values) {
 	t.refreshAt = time.Unix(accessTokenResp.Expiration, 0).Add(time.Duration(int64(bufferedTTL)) * time.Second)
 }
 func (t *iam) authenticate() {
+	// Clear the reauthentication time so that it will be set properly again.
+	t.reauthAt = ZERO_TIME
+
 	values := url.Values{}
 	values.Add("grant_type", "urn:ibm:params:oauth:grant-type:apikey")
 	values.Add("apikey", t.APIKey)
